@@ -198,9 +198,38 @@ public class LittleSearchEngine {
 	 *         your code - it is not used elsewhere in the program.
 	 */
 	public ArrayList<Integer> insertLastOccurrence(ArrayList<Occurrence> occs) {
-		// COMPLETE THIS METHOD
-		// THE FOLLOWING LINE HAS BEEN ADDED TO MAKE THE METHOD COMPILE
-		return null;
+		ArrayList<Integer> midpoints = new ArrayList<Integer>();
+		int listSize = occs.size();
+		
+		if(listSize == 1)
+			return null;
+		
+		Occurrence o = occs.remove(listSize - 1);
+		
+		int lo = 0;
+		int hi = occs.size() - 1;
+		
+		
+		int oFreq = o.frequency;
+		
+		while(lo <= hi) {
+			int mid = (lo + hi) / 2;
+			
+			if(lo == hi) 
+				occs.add(mid, o);
+			
+			int freqOfMid = occs.get(mid).frequency;
+			midpoints.add(mid);
+			
+			if(oFreq < freqOfMid) 
+				lo = mid + 1;
+			else if(oFreq > freqOfMid)
+				hi = mid - 1;
+			else 
+				occs.add(mid, o);
+		}
+		
+		return midpoints;
 	}
 	
 	/**
