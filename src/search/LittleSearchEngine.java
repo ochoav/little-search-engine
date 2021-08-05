@@ -138,9 +138,51 @@ public class LittleSearchEngine {
 	 * @return Keyword (word without trailing punctuation, LOWER CASE)
 	 */
 	public String getKeyWord(String word) {
-		// COMPLETE THIS METHOD
-		// THE FOLLOWING LINE HAS BEEN ADDED TO MAKE THE METHOD COMPILE
+		String keyword = word;
+		
+		keyword = trimTrailing(keyword);
+		keyword = keyword.toLowerCase();
+		
+		if(isAlphabetic(keyword)) {
+			String noiseWordMatch = this.noiseWords.get(keyword);
+			if(noiseWordMatch == null)
+				return keyword;
+			else
+				return null;
+		}
+		
+		
 		return null;
+	}
+	
+	private boolean isPunctuation(char c) {
+		return c == '.' || c == ',' || c == '?' || c == ':' || c == ';' || c == '!';
+	}
+	
+	private String trimTrailing(String word) {
+		String keyword = word;
+		
+		int lastPunctuation = word.length() - 1;
+		for(int i = word.length() - 1; i >= 0; i--) {
+			char c = word.charAt(i);
+			if(Character.isAlphabetic(c))
+				break;
+			if(isPunctuation(c))
+				lastPunctuation = i;
+		}
+		keyword = keyword.substring(0, lastPunctuation);
+		
+		return keyword;
+	}
+	
+	private boolean isAlphabetic(String word) {
+		for(int i = 0; i < word.length(); i++) {
+			char c = word.charAt(i);
+			if(!Character.isAlphabetic(c))
+				return false;
+		}
+		
+		return true;
 	}
 	
 	/**
@@ -179,5 +221,9 @@ public class LittleSearchEngine {
 		// COMPLETE THIS METHOD
 		// THE FOLLOWING LINE HAS BEEN ADDED TO MAKE THE METHOD COMPILE
 		return null;
+	}
+	
+	public static void main (String args[]) {
+		
 	}
 }
