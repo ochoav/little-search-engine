@@ -2,6 +2,7 @@ package search;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.BiConsumer;
 
 /**
  * This class encapsulates an occurrence of a keyword in a document. It stores the
@@ -108,9 +109,25 @@ public class LittleSearchEngine {
 	 */
 	public HashMap<String,Occurrence> loadKeyWords(String docFile) 
 	throws FileNotFoundException {
-		// COMPLETE THIS METHOD
-		// THE FOLLOWING LINE HAS BEEN ADDED TO MAKE THE METHOD COMPILE
-		return null;
+		Scanner sc = new Scanner(new File(docFile));
+		
+		HashMap<String, Occurrence> keywords = new HashMap<String, Occurrence>();
+		
+		while(sc.hasNext()) {
+			String kw = getKeyWord(sc.next());
+			if(kw == null) continue;
+			else {
+				if(keywords.containsKey(kw)) {
+					Occurrence kwo = keywords.get(kw);
+					kwo.frequency++;
+				} else {
+					Occurrence kwo = new Occurrence(docFile, 1);
+					keywords.put(kw, kwo);
+				}
+			}
+		}
+		
+		return keywords;
 	}
 	
 	/**
@@ -123,7 +140,17 @@ public class LittleSearchEngine {
 	 * @param kws Keywords hash table for a document
 	 */
 	public void mergeKeyWords(HashMap<String,Occurrence> kws) {
-		// COMPLETE THIS METHOD
+		kws.forEach(new BiConsumer<String, Occurrence>() {
+			public void accept(String kw, Occurrence kwo) {
+				if(keywordsIndex.containsKey(kw)) {
+					insertLastOccurrence(keywordsIndex.get(kw));
+				} else {
+					ArrayList<Occurrence> occurrenceList = new ArrayList<Occurrence>();
+					occurrenceList.add(kwo);
+					keywordsIndex.put(kw, occurrenceList);
+				}
+			}
+		});
 	}
 	
 	/**
