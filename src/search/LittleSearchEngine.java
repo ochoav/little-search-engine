@@ -302,6 +302,8 @@ public class LittleSearchEngine {
 		
 		
 		while(iterator1 != null && iterator1.hasNext() && iterator2 != null && iterator2.hasNext()) {
+			if(names.size() >= 5) break;
+			
 			Occurrence kw1Doc = iterator1.next();
 			Occurrence kw2Doc = iterator2.next();
 			
@@ -317,13 +319,13 @@ public class LittleSearchEngine {
 			}
 		}
 		
-		while(iterator1 != null && iterator1.hasNext()) {
+		while(iterator1 != null && iterator1.hasNext() && names.size() < 5) {
 			Occurrence kw1Doc = iterator1.next();
 			if(!names.contains(kw1Doc.document))
 					names.add(kw1Doc.document);
 		}
 		
-		while(iterator2 != null && iterator2.hasNext()) {
+		while(iterator2 != null && iterator2.hasNext() && names.size() < 5) {
 			Occurrence kw2Doc = iterator2.next();
 			if(!names.contains(kw2Doc.document))
 				names.add(kw2Doc.document);
