@@ -1,2 +1,3 @@
-AliceCh1.txt
-WowCh1.txt
+tester.txt
+tester2.txt
+tester3.txt

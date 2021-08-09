@@ -229,24 +229,21 @@ public class LittleSearchEngine {
 		ArrayList<Integer> midpoints = new ArrayList<Integer>();
 		int listSize = occs.size();
 		
-		if(listSize == 1)
+		if(listSize == 1) {
 			return null;
+		}
 		
 		Occurrence o = occs.remove(listSize - 1);
 		
 		int lo = 0;
 		int hi = occs.size() - 1;
+		int mid = (lo + hi) / 2;
 		
 		
 		int oFreq = o.frequency;
 		
 		while(lo <= hi) {
-			int mid = (lo + hi) / 2;
-			
-			if(lo == hi) {
-				occs.add(mid, o);
-				break;
-			}
+			mid = (lo + hi) / 2;
 			
 			int freqOfMid = occs.get(mid).frequency;
 			midpoints.add(mid);
@@ -260,6 +257,12 @@ public class LittleSearchEngine {
 				break;
 			}
 		}
+		
+		if(occs.get(mid).frequency > oFreq)
+			occs.add(mid - 1, o);
+		else
+			occs.add(mid, o);
+		
 		
 		return midpoints;
 	}
@@ -339,7 +342,7 @@ public class LittleSearchEngine {
 			System.out.print(e.toString());
 		}
 		
-		ArrayList<String> search = lse.top5search("world", "xylophone");
+		ArrayList<String> search = lse.top5search("xylophone", "banana");
 		System.out.println(search.size());
 		
 		for(String s : search) {
