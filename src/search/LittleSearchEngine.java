@@ -143,6 +143,7 @@ public class LittleSearchEngine {
 		kws.forEach(new BiConsumer<String, Occurrence>() {
 			public void accept(String kw, Occurrence kwo) {
 				if(keywordsIndex.containsKey(kw)) {
+					keywordsIndex.get(kw).add(kwo);
 					insertLastOccurrence(keywordsIndex.get(kw));
 				} else {
 					ArrayList<Occurrence> occurrenceList = new ArrayList<Occurrence>();
@@ -274,12 +275,56 @@ public class LittleSearchEngine {
 	 *         the result is null.
 	 */
 	public ArrayList<String> top5search(String kw1, String kw2) {
-		// COMPLETE THIS METHOD
-		// THE FOLLOWING LINE HAS BEEN ADDED TO MAKE THE METHOD COMPILE
-		return null;
+		ArrayList<String> names = new ArrayList<String>();
+		
+		int r1index = 0;
+		Occurrence result1 = keywordsIndex.get(kw1).get(r1index);
+		int r2index = 0;
+		Occurrence result2 = keywordsIndex.get(kw2).get(r2index);
+		
+		while(names.size() <= 5) {
+			if(result1 == null && result2 == null)
+				break;
+			else if(result1 == null) {
+				if(!names.contains(result2.document))
+					names.add(result2.document);
+				
+				result2 = keywordsIndex.get(kw2).get(++r2index);
+			} else if(result2 == null) {
+				if(!names.contains(result1.document))
+					names.add(result1.document);
+				
+				result1 = keywordsIndex.get(kw1).get(++r1index);
+			} else {
+				if(result1.frequency >= result2.frequency) {
+					names.add(result1.document);
+					result1 = keywordsIndex.get(kw1).get(++r1index);
+				} else {
+					names.add(result2.document);
+					result2 = keywordsIndex.get(kw1).get(++r2index);
+				}
+			}
+			
+		}
+		
+		
+		return names;
 	}
 	
 	public static void main (String args[]) {
+		LittleSearchEngine lse = new LittleSearchEngine();
+		
+		try {
+		lse.makeIndex("docs.txt", "noisewords.txt");
+		} catch (Exception e) {
+			System.out.print(e.toString());
+		}
+		
+		ArrayList<String> search = lse.top5search("deep", "world");
+		
+		for(String s : search) {
+			System.out.println(s);
+		}
 		
 	}
 }
