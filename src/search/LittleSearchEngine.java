@@ -259,7 +259,7 @@ public class LittleSearchEngine {
 		}
 		
 		if(occs.get(mid).frequency > oFreq)
-			occs.add(mid - 1, o);
+			occs.add(mid + 1, o);
 		else
 			occs.add(mid, o);
 		
