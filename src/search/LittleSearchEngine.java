@@ -190,7 +190,7 @@ public class LittleSearchEngine {
 	private String trimTrailing(String word) {
 		String keyword = word;
 		
-		int lastPunctuation = word.length() - 1;
+		int lastPunctuation = word.length();
 		for(int i = word.length() - 1; i >= 0; i--) {
 			char c = word.charAt(i);
 			if(Character.isAlphabetic(c))
@@ -243,8 +243,10 @@ public class LittleSearchEngine {
 		while(lo <= hi) {
 			int mid = (lo + hi) / 2;
 			
-			if(lo == hi) 
+			if(lo == hi) {
 				occs.add(mid, o);
+				break;
+			}
 			
 			int freqOfMid = occs.get(mid).frequency;
 			midpoints.add(mid);
@@ -253,8 +255,10 @@ public class LittleSearchEngine {
 				lo = mid + 1;
 			else if(oFreq > freqOfMid)
 				hi = mid - 1;
-			else 
+			else {
 				occs.add(mid, o);
+				break;
+			}
 		}
 		
 		return midpoints;
@@ -277,41 +281,47 @@ public class LittleSearchEngine {
 	public ArrayList<String> top5search(String kw1, String kw2) {
 		ArrayList<String> names = new ArrayList<String>();
 		
-		int r1index = 0;
-		Occurrence result1 = keywordsIndex.get(kw1).get(r1index);
-		int r2index = 0;
-		Occurrence result2 = keywordsIndex.get(kw2).get(r2index);
+		ArrayList<Occurrence> o1 = this.keywordsIndex.get(kw1);
+		ListIterator<Occurrence> iterator1 = o1.listIterator();
+		ArrayList<Occurrence> o2 = this.keywordsIndex.get(kw2);
+		ListIterator<Occurrence> iterator2 = o2.listIterator();
 		
-		while(names.size() <= 5) {
-			if(result1 == null && result2 == null)
-				break;
-			else if(result1 == null) {
-				if(!names.contains(result2.document))
-					names.add(result2.document);
-				
-				result2 = keywordsIndex.get(kw2).get(++r2index);
-			} else if(result2 == null) {
-				if(!names.contains(result1.document))
-					names.add(result1.document);
-				
-				result1 = keywordsIndex.get(kw1).get(++r1index);
-			} else {
-				if(result1.frequency >= result2.frequency) {
-					names.add(result1.document);
-					result1 = keywordsIndex.get(kw1).get(++r1index);
-				} else {
-					names.add(result2.document);
-					result2 = keywordsIndex.get(kw1).get(++r2index);
-				}
-			}
+		if(o2.size() == 0 && o1.size() == 0)
+			return null;
+		
+		while(iterator1.hasNext() && iterator2.hasNext()) {
+			Occurrence kw1Doc = iterator1.next();
+			Occurrence kw2Doc = iterator2.next();
 			
+			if(kw1Doc.frequency >= kw2Doc.frequency) {
+				if(!names.contains(kw1Doc.document))
+					names.add(kw1Doc.document);
+				//to ensure when both get moved next again, the cursor hasn't "moved"
+				iterator2.previous();
+			} else {
+				if(!names.contains(kw2Doc.document))
+					names.add(kw2Doc.document);
+				iterator1.previous();
+			}
+		}
+		
+		while(iterator1.hasNext()) {
+			Occurrence kw1Doc = iterator1.next();
+			if(!names.contains(kw1Doc.document))
+					names.add(kw1Doc.document);
+		}
+		
+		while(iterator2.hasNext()) {
+			Occurrence kw2Doc = iterator2.next();
+			if(!names.contains(kw2Doc.document))
+				names.add(kw2Doc.document);
 		}
 		
 		
 		return names;
 	}
 	
-	public static void main (String args[]) {
+	public static void main(String args[]) {
 		LittleSearchEngine lse = new LittleSearchEngine();
 		
 		try {
@@ -320,10 +330,11 @@ public class LittleSearchEngine {
 			System.out.print(e.toString());
 		}
 		
-		ArrayList<String> search = lse.top5search("deep", "world");
+		ArrayList<String> search = lse.top5search("true", "world");
+		System.out.println(search.size());
 		
 		for(String s : search) {
-			System.out.println(s);
+			System.out.print(s + ", ");
 		}
 		
 	}
