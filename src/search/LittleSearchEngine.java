@@ -282,14 +282,23 @@ public class LittleSearchEngine {
 		ArrayList<String> names = new ArrayList<String>();
 		
 		ArrayList<Occurrence> o1 = this.keywordsIndex.get(kw1);
-		ListIterator<Occurrence> iterator1 = o1.listIterator();
 		ArrayList<Occurrence> o2 = this.keywordsIndex.get(kw2);
-		ListIterator<Occurrence> iterator2 = o2.listIterator();
 		
-		if(o2.size() == 0 && o1.size() == 0)
+		
+		if(o1 == null && o2 == null)
 			return null;
 		
-		while(iterator1.hasNext() && iterator2.hasNext()) {
+		ListIterator<Occurrence> iterator1 = null;
+		ListIterator<Occurrence> iterator2 = null;
+		
+		if(o1 != null)
+			iterator1 = o1.listIterator();
+		
+		if(o2 != null)
+			iterator2 = o2.listIterator();
+		
+		
+		while(iterator1 != null && iterator1.hasNext() && iterator2 != null && iterator2.hasNext()) {
 			Occurrence kw1Doc = iterator1.next();
 			Occurrence kw2Doc = iterator2.next();
 			
@@ -305,13 +314,13 @@ public class LittleSearchEngine {
 			}
 		}
 		
-		while(iterator1.hasNext()) {
+		while(iterator1 != null && iterator1.hasNext()) {
 			Occurrence kw1Doc = iterator1.next();
 			if(!names.contains(kw1Doc.document))
 					names.add(kw1Doc.document);
 		}
 		
-		while(iterator2.hasNext()) {
+		while(iterator2 != null && iterator2.hasNext()) {
 			Occurrence kw2Doc = iterator2.next();
 			if(!names.contains(kw2Doc.document))
 				names.add(kw2Doc.document);
@@ -330,7 +339,7 @@ public class LittleSearchEngine {
 			System.out.print(e.toString());
 		}
 		
-		ArrayList<String> search = lse.top5search("true", "world");
+		ArrayList<String> search = lse.top5search("world", "xylophone");
 		System.out.println(search.size());
 		
 		for(String s : search) {
