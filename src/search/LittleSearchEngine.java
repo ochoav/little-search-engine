@@ -225,7 +225,7 @@ public class LittleSearchEngine {
 	 *         null if the size of the input list is 1. This returned array list is only used to test
 	 *         your code - it is not used elsewhere in the program.
 	 */
-	public ArrayList<Integer> insertLastOccurrence(ArrayList<Occurrence> occs) {
+	public static ArrayList<Integer> insertLastOccurrence(ArrayList<Occurrence> occs) {
 		ArrayList<Integer> midpoints = new ArrayList<Integer>();
 		int listSize = occs.size();
 		
@@ -246,6 +246,7 @@ public class LittleSearchEngine {
 			mid = (lo + hi) / 2;
 			
 			int freqOfMid = occs.get(mid).frequency;
+			System.out.print(mid);
 			midpoints.add(mid);
 			
 			if(oFreq < freqOfMid) 
@@ -257,6 +258,7 @@ public class LittleSearchEngine {
 				break;
 			}
 		}
+		System.out.println();
 		
 		if(occs.get(mid).frequency > oFreq)
 			occs.add(mid + 1, o);
@@ -335,21 +337,4 @@ public class LittleSearchEngine {
 		return names;
 	}
 	
-	public static void main(String args[]) {
-		LittleSearchEngine lse = new LittleSearchEngine();
-		
-		try {
-		lse.makeIndex("docs.txt", "noisewords.txt");
-		} catch (Exception e) {
-			System.out.print(e.toString());
-		}
-		
-		ArrayList<String> search = lse.top5search("xylophone", "banana");
-		System.out.println(search.size());
-		
-		for(String s : search) {
-			System.out.print(s + ", ");
-		}
-		
-	}
 }
